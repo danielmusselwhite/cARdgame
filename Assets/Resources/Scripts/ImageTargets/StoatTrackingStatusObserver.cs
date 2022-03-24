@@ -51,59 +51,6 @@ public class StoatTrackingStatusObserver : MonoBehaviour
             mObserverBehaviour.OnTargetStatusChanged -= OnStatusChanged;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //bool lastTrackingStatus;
-    //// Start is called before the first frame update
-    //void Start()
-    //{
-    //    lastTrackingStatus = isTrackingImageTarget(gameObject.name);
-    //}
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-    //    bool isTracking = isTrackingImageTarget(gameObject.name);
-    //    // if we have just started tracking this imageTarget...
-    //    if (isTracking == true && lastTrackingStatus == false)
-    //    {
-    //        //... create a new imageTarget of this type in case an identical card is played
-    //        Debug.Log("Just started tracking " + gameObject.name);
-    //    }
-
-    //    // if we have just stopped tracking this imageTarget...
-    //    if (isTracking == false && lastTrackingStatus == true)
-    //    {
-    //        //... destroy this imageTarget (unless there is only 1 of them, as we want a minimum of 1)
-    //        Debug.Log("Just stopped tracking " + gameObject.name);
-    //    }
-    //    lastTrackingStatus = isTrackingImageTarget(gameObject.name);
-    //}
-
-
-    //private ObserverBehaviour mObserverBehaviour;
-
-    //private bool isTrackingImageTarget(string imageTargetName)
-    //{
-    //    IVuModelTargetState
-    //    Vuforia.DataSetTrackableBehaviour
-    //    //Vuforia.DefaultObserverBehaviourPlaceholder
-    //}
 }
 
 
