@@ -8,10 +8,13 @@ public class StoatTrackingStatusObserver : MonoBehaviour
 {
     private ObserverBehaviour mObserverBehaviour;
     private Status previousState;
+    private static int id;
 
     // Start is called before the first frame update
     void Start()
     {
+        id += 1;
+
         previousState = Status.NO_POSE; // defaulting to not being observed
 
         ObserverBehaviour mObserverBehaviour = GetComponent<ObserverBehaviour>();
@@ -28,18 +31,15 @@ public class StoatTrackingStatusObserver : MonoBehaviour
             // ... so lets create another instance of this ImageTarget, in case an identical card is played again
             Debug.Log(gameObject.name + " | Was not tracked before, but now it is");
             // creating a new instance of the ImageTarget for the Stoat, in case an additional Stoat card is played
-            Instantiate(gameObject, new Vector3(0, 0, 0), Quaternion.identity);
+            var track = Instantiate(gameObject, new Vector3(0, 0, 0), Quaternion.identity);
+            track.name = "ImageTarget_Stoat_" + id;
         }
 
         // if the state was tracked, but it isn't anymore ...
         if (status.Status != Status.TRACKED && previousState == Status.TRACKED){
-            // ... then we should delete this ImageTarget, unless this is the only ImageTarget
+            // ... then we should delete this ImageTarge
             Debug.Log(gameObject.name + " | Was tracked before, but now it is not");
-
-            // if there is more than 1 Stoat prefab currently...
-            if (GameObject.FindGameObjectsWithTag("Card_Stoat").Length > 1)
-                Destroy(gameObject, 0); //... then destroy the additional ImageTarget for this stoat card
-
+            Destroy(gameObject, 0);
         }
 
 
