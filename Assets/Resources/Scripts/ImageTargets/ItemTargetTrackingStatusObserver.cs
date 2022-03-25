@@ -38,11 +38,30 @@ public class ItemTargetTrackingStatusObserver : MonoBehaviour
             {
                 Debug.Log(gameObject.name + " | Was not found within "+destroyTimerMax+" seconds of becoming Extended_Tracked");
                 Destroy(gameObject, 0);
-
+        
             }
 
         }
-        
+
+
+
+        // changing the name; will later extend this to not be so simple as being when you press space and to do more interesting things
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            var children = GameObject.FindGameObjectsWithTag("Card_Name");
+
+            // for each of the children, check to find if its parent is this object, to find our child Card_name
+            for (int j=0; j<children.Length; j++)
+            {
+                // if this child is our child...
+                if (children[j].transform.parent.name == gameObject.name)
+                    //update its values
+                    children[j].GetComponent<TextMesh>().text += Mathf.RoundToInt(Random.Range(0, 9));
+            }
+            
+
+        }
+       
     }
 
     void OnStatusChanged(ObserverBehaviour behaviour, TargetStatus status)
