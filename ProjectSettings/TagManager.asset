@@ -5,6 +5,15 @@ TagManager:
   serializedVersion: 2
   tags:
   - Card_Name
+  - Card_Power
+  - Card_Health
+  - Card_Art
+  - Card_Cost
+  - Card_Base
+  - Card_Tribe1
+  - Card_Anim_Body
+  - Card_Anim_Mouth
+  - Card_Anim_Eyes
   layers:
   - Default
   - TransparentFX
