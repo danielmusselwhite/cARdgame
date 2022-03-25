@@ -6,9 +6,13 @@ using Vuforia;
 public class ItemTargetTrackingStatusObserver : MonoBehaviour
 {
     private ObserverBehaviour mObserverBehaviour;
+    private Status currentState;
     private Status previousState;
     public string baseName;
     private static Dictionary<string, int> imageTarget_counts = new Dictionary<string, int>();
+
+    private float destroyTimerMax = 2.0f;
+    private float destroyTimer = 2.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -16,15 +20,36 @@ public class ItemTargetTrackingStatusObserver : MonoBehaviour
 
         previousState = Status.NO_POSE; // defaulting to not being observed
 
+        //  observe when the tracking status has changed
         ObserverBehaviour mObserverBehaviour = GetComponent<ObserverBehaviour>();
-
         if (mObserverBehaviour != null)
             mObserverBehaviour.OnTargetStatusChanged += OnStatusChanged;
     }
+
+    // Called every game frame
+    private void Update()
+    {
+        // if currentState is Extended_Tracked, then decrement the counter
+        if(currentState == Status.EXTENDED_TRACKED)
+        {
+            destroyTimer -= Time.deltaTime;
+            // if the counter is now <= 0, destroy the imageTarget, as we did not find it again within time.
+            if(destroyTimer <= 0)
+            {
+                Debug.Log(gameObject.name + " | Was not found within "+destroyTimerMax+" seconds of becoming Extended_Tracked");
+                Destroy(gameObject, 0);
+
+            }
+
+        }
+        
+    }
+
     void OnStatusChanged(ObserverBehaviour behaviour, TargetStatus status)
     {
+        currentState = status.Status;
         // if the state was not tracked, but it now is ...
-        if (status.Status == Status.TRACKED && previousState != Status.TRACKED)
+        if (currentState == Status.TRACKED && previousState != Status.TRACKED)
         {
             // ... so lets create another instance of this ImageTarget, in case an identical card is played again
             Debug.Log(gameObject.name + " | Was not tracked before, but now it is");
@@ -34,16 +59,22 @@ public class ItemTargetTrackingStatusObserver : MonoBehaviour
             track.name = baseName + imageTarget_counts[baseName];
         }
 
-        // if the state was tracked/extended tracked, but it isn't anymore ...
-        if (status.Status != Status.TRACKED && status.Status != Status.EXTENDED_TRACKED && previousState == Status.TRACKED)
+        // if the state was tracked, but it is now extended tracked...
+        if (currentState == Status.EXTENDED_TRACKED)
         {
-            // ... then we should delete this ImageTarge
+            // ... start the destroy timer for 2 seconds
             Debug.Log(gameObject.name + " | Was tracked before, but now it is not");
+            destroyTimer = destroyTimerMax;
+        }
+
+        // if the state was isn't Tracked or Extended_Tracked, destroy it as we have lost it
+        if (currentState != Status.TRACKED && currentState != Status.EXTENDED_TRACKED)
+        {
+            Debug.Log(gameObject.name + " | Was lost track of");
             Destroy(gameObject, 0);
         }
 
-
-        previousState = status.Status; //updating the previous state
+        previousState = currentState; //updating the previous state
     }
     void OnDestroy()
     {
@@ -60,5 +91,7 @@ public class ItemTargetTrackingStatusObserver : MonoBehaviour
         else
             imageTarget_counts[baseName]++;
     }
+
+
 
 }
