@@ -12,18 +12,22 @@ public class TalkingCard : MonoBehaviour
 
 
     //blinkTimers
-    private float eyeOpenTimerMax = 3.0f;
+    private float eyeOpenTimerMaxMax = 6.0f;
+    private float eyeOpenTimerMaxMin = 3.0f; // pick random value to wait between this and the max
     private float eyeOpenTimer = 2.0f;
     private float eyeCloseTimerMax = 0.2f;
     private float eyeCloseTimer = -1f;
 
     //speechTimers
-    private float speakShowTimerMax = 3.0f;
+    private float speakShowTimerMax = 6.0f;
     private float speakShowTimer = -1f;
-    private float speakHideTimerMax = 8.0f;
+    private float speakHideTimerMaxMax = 10.0f;
+    private float speakHideTimerMaxMin = 1.0f; // pick random value to wait between this and the max
     private float speakHideTimer = 8.0f;
 
     //mouthAnimationTimers (only used when speaking)
+    private float mouthMoveTimerMax = 2.5f;
+    private float mouthMoveTimer = 2.5f;
     private float mouthOpenTimerMax = 0.2f;
     private float mouthOpenTimer = 0.2f;
     private float mouthCloseTimerMax = 0.2f;
@@ -124,7 +128,7 @@ public class TalkingCard : MonoBehaviour
             if (eyeCloseTimer <= 0)
             {
                 eye_child.GetComponent<MeshRenderer>().material = eyesOpen;
-                eyeOpenTimer = eyeOpenTimerMax;
+                eyeOpenTimer = Random.Range(eyeOpenTimerMaxMin, eyeOpenTimerMaxMax);
             }
         }
 
@@ -140,42 +144,56 @@ public class TalkingCard : MonoBehaviour
             speakShowTimer -= Time.deltaTime;
 
             #region "Animating mouth whilst speaking
-
-            //if our mouth is open
-            if (mouthOpenTimer > 0)
+            //if we still want to move the mouth
+            if (mouthMoveTimer > 0)
             {
-                mouthOpenTimer -= Time.deltaTime;
+                mouthMoveTimer -= Time.deltaTime;
 
-
-                //if the timer has now run out, close our mouth and start the close mouth timer
-                if (mouthOpenTimer <= 0)
+                //if our mouth is open
+                if (mouthOpenTimer > 0)
                 {
-                    mouth_child.GetComponent<MeshRenderer>().material = mouthClosed;
-                    mouthCloseTimer = mouthCloseTimerMax;
+                    mouthOpenTimer -= Time.deltaTime;
+
+
+                    //if the timer has now run out, close our mouth and start the close mouth timer
+                    if (mouthOpenTimer <= 0)
+                    {
+                        mouth_child.GetComponent<MeshRenderer>().material = mouthClosed;
+                        mouthCloseTimer = mouthCloseTimerMax;
+                    }
                 }
+                //else our mouth is closed
+                else
+                {
+                    mouthCloseTimer -= Time.deltaTime;
+
+                    //if the timer has now run out, open our mouth and start the open mouth timer
+                    if (mouthCloseTimer <= 0)
+                    {
+                        mouth_child.GetComponent<MeshRenderer>().material = mouthOpen;
+                        mouthOpenTimer = mouthOpenTimerMax;
+                    }
+                }
+           
             }
-            //else our mouth is closed
+            //else we have stopped moving our mouth, set it back to closed
             else
             {
-                mouthCloseTimer -= Time.deltaTime;
-
-                //if the timer has now run out, open our mouth and start the open mouth timer
-                if (mouthCloseTimer <= 0)
-                {
-                    mouth_child.GetComponent<MeshRenderer>().material = mouthOpen;
-                    mouthOpenTimer = mouthOpenTimerMax;
-                }
+                mouth_child.GetComponent<MeshRenderer>().material = mouthClosed;
             }
+
 
             #endregion
 
 
-            //if the timer has now run out, not talking so close our mouth, reset our name, start the speakHideTimer, and reset the mouth open/close timers ready for the next time
+            //if the timer has now run out, not talking so close our mouth, reset our name, start the speakHideTimer, and reset the mouth move timer ready for the next time
             if (speakShowTimer <= 0)
             {
                 name_child.GetComponent<TextMesh>().text = original_name;
                 mouth_child.GetComponent<MeshRenderer>().material = mouthClosed;
-                speakHideTimer = speakHideTimerMax;
+                speakHideTimer = Random.Range(speakHideTimerMaxMin, speakHideTimerMaxMax);
+                mouthMoveTimer = mouthMoveTimerMax;
+
             }
         }
 
