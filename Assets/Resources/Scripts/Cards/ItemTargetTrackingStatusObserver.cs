@@ -9,8 +9,9 @@ public class ItemTargetTrackingStatusObserver : MonoBehaviour
     private Status currentState;
     private Status previousState;
     public string baseName;
-    private static Dictionary<string, int> imageTarget_counts = new Dictionary<string, int>();
+    private static Dictionary<string, int> imageTarget_counts = new Dictionary<string, int>(); // used to give each object name its own unique ID
 
+    //destroy object if it remains "Extended_Tracked" for the duration of this timer 
     private float destroyTimerMax = 2.0f;
     private float destroyTimer = 2.0f;
 
@@ -42,28 +43,10 @@ public class ItemTargetTrackingStatusObserver : MonoBehaviour
             }
 
         }
-
-
-
-        // changing the name; will later extend this to not be so simple as being when you press space and to do more interesting things
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            var children = GameObject.FindGameObjectsWithTag("Card_Name");
-
-            // for each of the children, check to find if its parent is this object, to find our child Card_name
-            for (int j=0; j<children.Length; j++)
-            {
-                // if this child is our child...
-                if (children[j].transform.parent.name == gameObject.name)
-                    //update its values
-                    children[j].GetComponent<TextMesh>().text += Mathf.RoundToInt(Random.Range(0, 9));
-            }
-            
-
-        }
        
     }
 
+    //Handling different states of tracking of the imageTarget
     void OnStatusChanged(ObserverBehaviour behaviour, TargetStatus status)
     {
         currentState = status.Status;
@@ -95,12 +78,14 @@ public class ItemTargetTrackingStatusObserver : MonoBehaviour
 
         previousState = currentState; //updating the previous state
     }
+
     void OnDestroy()
     {
         if (mObserverBehaviour != null)
             mObserverBehaviour.OnTargetStatusChanged -= OnStatusChanged;
     }
 
+    //incrementing counter for this ImageTracker in the dictionary of trackers
     private void incrementCounter()
     {
         // if this is not present in our dictionary of imageTargets we are counting; add it (initialising count to 0)

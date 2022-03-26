@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TalkingCard : MonoBehaviour
 {
+
     // the children we are changing the images for the animations
     GameObject eye_child;
     GameObject mouth_child;
@@ -23,18 +24,10 @@ public class TalkingCard : MonoBehaviour
     private float speakHideTimer = 8.0f;
 
     //mouthAnimationTimers (only used when speaking)
-    private float mouthOpenTimerMax = 0.3f;
-    private float mouthOpenTimer = 0.3f;
-    private float mouthCloseTimerMax = 0.3f;
+    private float mouthOpenTimerMax = 0.2f;
+    private float mouthOpenTimer = 0.2f;
+    private float mouthCloseTimerMax = 0.2f;
     private float mouthCloseTimer = -1f;
-
-    //random phrases to speak when talking
-    private string idlePhrase1 = "Hello";
-    private string idlePhrase2 = "World";
-    private string idlePhrase3 = "Random";
-    private string idlePhrase4 = "Test";
-    private string idlePhrase5 = "Something";
-
 
     //add the materials for the animation in the inspector
     public Material eyesOpen;
@@ -45,6 +38,7 @@ public class TalkingCard : MonoBehaviour
     private string original_name;
 
     //add the phrases for saying in the ide
+    public string[] idlePhrases; // source from the inscryption wikipedia quotes section for each card
 
     // Start is called before the first frame update
     void Start()
@@ -190,39 +184,14 @@ public class TalkingCard : MonoBehaviour
         {
             speakHideTimer -= Time.deltaTime;
 
-            //if the timer has now run out, xxxxxxxxxxxxxxxx
+            //if the timer has now run out, pick a random phrase to speak and reset the timer for showing speech
             if (speakHideTimer <= 0)
             {
-                name_child.GetComponent<TextMesh>().text = "HELLO";
+                name_child.GetComponent<TextMesh>().text = idlePhrases[Random.Range(0,idlePhrases.Length-1)]; // pick a random idle phrase
                 mouth_child.GetComponent<MeshRenderer>().material = mouthOpen;
                 speakShowTimer = speakShowTimerMax;
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-        ////else our eyes are closed
-        //else
-        //{
-        //    eyeCloseTimer -= Time.deltaTime;
-
-        //    //if the timer has now run out, open our eyes and start the open eyes timer
-        //    if (eyeCloseTimer <= 0)
-        //    {
-        //        eye_child.GetComponent<MeshRenderer>().material = eyesOpen;
-        //        eyeOpenTimer = eyeOpenTimerMax;
-        //    }
-        //}
 
         #endregion
 
