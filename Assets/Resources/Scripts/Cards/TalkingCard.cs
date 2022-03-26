@@ -21,9 +21,9 @@ public class TalkingCard : MonoBehaviour
     //speechTimers
     private float speakShowTimerMax = 6.0f;
     private float speakShowTimer = -1f;
-    private float speakHideTimerMaxMax = 10.0f;
-    private float speakHideTimerMaxMin = 1.0f; // pick random value to wait between this and the max
-    private float speakHideTimer = 8.0f;
+    private float speakHideTimerMaxMax = 30.0f;
+    private float speakHideTimerMaxMin = 10.0f; // pick random value to wait between this and the max
+    private float speakHideTimer = 8.0f; // TODO - want it talking relatively quickly after playing for sake of testing; set this to larger value later
 
     //mouthAnimationTimers (only used when speaking)
     private float mouthMoveTimerMax = 2.5f;
