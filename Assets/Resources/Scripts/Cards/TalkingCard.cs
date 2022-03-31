@@ -39,7 +39,7 @@ public class TalkingCard : MonoBehaviour
     public Material mouthOpen;
     public Material mouthClosed;
 
-    private string original_name;
+    public string original_name;
 
     //add the phrases for saying in the ide
     public string[] idlePhrases; // source from the inscryption wikipedia quotes section for each card
@@ -90,7 +90,6 @@ public class TalkingCard : MonoBehaviour
             {
                 //store reference to this name child
                 name_child = name_children[j];
-                original_name = name_child.GetComponent<TextMesh>().text;
                 break;
             }
                 
